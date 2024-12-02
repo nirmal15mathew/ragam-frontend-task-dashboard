@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Track - Dashboard</title>
+  <link rel="stylesheet" href="src/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="shortcut icon" href="/images/favicon-32x32.png" type="image/x-icon">
+</head>
+<body>
+  <div class="w-screen h-screen dark:bg-neutral_deep_blue flex items-center justify-center bg-slate-100">
+    <main class="w-3/4 grid grid-cols-4 gap-6 transition-colors" x-data="app">
+      <button class="fixed top-10 right-10 rounded-full p-2 dark:bg-neutral_dark_blue shadow-lg" @click="toggleTheme">
+        <!-- Floating Action button -->
+         <span x-data="{
+          theme: localStorage,
+          get isTheme() {
+            if (!('theme' in this.theme)) {
+              return 'monitor'
+            }
+            else {
+              if (this.theme.theme == 'dark') {
+                return 'moon'
+              }
+              else {
+                return 'sun'
+              }
+            }
+          }
+         }">
+         <img :src=`./images/${isTheme}.svg` alt="" width="20px">
+        </span>
+      </button>
+      <!-- Dashboard -->
+      <section class="dark:bg-neutral_dark_blue rounded-xl grid grid-rows-3 shadow bg-slate-200">
+        <header class="bg-primary_blue row-span-2 p-6 rounded-xl shadow grid grid-rows-3 ">
+          <figure class="rounded-full border-2 border-white max-w-fit row-span-1 max-h-fit">
+            <img src="./images/image-jeremy.png" alt="" srcset="" width="50px">
+          </figure>
+          <div class="text-white px-2">
+            <p class="text-neutral_pale_blue">
+              Report for
+            </p>
+            <h1 class="text-3xl font-light">
+              Jeremy
+            </h1>
+            <h1 class="text-3xl font-light">
+              Robinson
+            </h1>
+          </div>
+        </header>
+        <main class="row-span-1 px-4 py-2 flex items-center">
+          <ul class="flex flex-col">
+            <li :class="(period == 'daily')? ' dark:text-white cursor-pointer py-2 px-4 transition-colors text-slate-900':'dark:text-neutral_pale_blue dark:hover:text-white cursor-pointer py-2 px-4 transition-colors text-slate-500 hover:text-slate-900'" @click="setDaily">Daily</li>
+            <li :class="(period == 'weekly')? ' dark:text-white cursor-pointer py-2 px-4 transition-colors text-slate-900':'dark:text-neutral_pale_blue dark:hover:text-white cursor-pointer py-2 px-4 transition-colors text-slate-500 hover:text-slate-900'" @click="setWeekly">Weekly</li>
+            <li :class="(period == 'monthly')? ' dark:text-white cursor-pointer py-2 px-4 transition-colors text-slate-900':'dark:text-neutral_pale_blue dark:hover:text-white cursor-pointer py-2 px-4 transition-colors text-slate-500 hover:text-slate-900'" @click="setMonthly">Monthly</li>
+          </ul>
+        </main>
+      </section>
+      <section class="col-span-3 grid grid-rows-2 grid-cols-3 gap-6">
+        <!-- Work Card-->
+        <div class="rounded-xl flex-col overflow-hidden grid grid-rows-3 dark:text-white relative shadow" x-data="{
+          current: 0,
+          previous: 0,
+          get current() {
+            return this.work.timeframes[period].current
+          },
+          get previous() {
+            return this.work.timeframes[period].previous
+          }
+        }">
+          <!-- Card -->
+          <div class="w-full flex justify-end row-span-1 h-min absolute px-4 bg-primary_red -top-2">
+            <!-- Card Image -->
+            <img src="./images/icon-work.svg" alt="">
+          </div>
+          <div class="row-span-3 rounded-xl dark:bg-neutral_dark_blue bg-slate-200 grid grid-rows-3 p-4 absolute bottom-0 right-0 left-0 top-[20%] dark:hover:bg-blue-950 hover:bg-slate-300 transition-colors cursor-pointer">
+            <header class="row-span-1 p-2 flex items-center justify-between"> 
+              <span>
+                Work
+              </span>
+              <span class="cursor-pointer">
+                <img src="./images/icon-ellipsis.svg" alt="" srcset="">
+              </span>
+            </header>
+            <main class="row-span-2 p-2 flex flex-col justify-evenly">
+              <h2 class="text-5xl font-light">
+                <span x-text="current"></span>hrs
+              </h2>
+              <span class="dark:text-neutral_pale_blue text-xs text-slate-500">
+                Last <span x-text="period_" x-data="{period_: '', get period_() {if (this.period == 'daily') {return 'Day'} else if (this.period == 'weekly') {return 'Week'} else {return 'Month'}}}"></span> - <span x-text="previous"></span>hrs
+              </span>
+            </main>
+          </div>
+        </div>
+
+        <!-- Play Card -->
+        <div class="rounded-xl flex-col overflow-hidden grid grid-rows-3 dark:text-white relative shadow" x-data="{
+          current: 0,
+          previous: 0,
+          get current() {
+            return this.play.timeframes[period].current
+          },
+          get previous() {
+            return this.play.timeframes[period].previous
+          }
+        }">
+          <!-- Card -->
+          <div class="w-full flex justify-end row-span-1 h-min absolute px-4 bg-primary_soft_blue -top-2">
+            <!-- Card Image -->
+            <img src="./images/icon-play.svg" alt="">
+          </div>
+          <div class="row-span-3 rounded-xl dark:bg-neutral_dark_blue grid grid-rows-3 p-4 absolute bottom-0 right-0 left-0 top-[20%] dark:hover:bg-blue-950 hover:bg-slate-300 transition-colors cursor-pointer bg-slate-200">
+            <header class="row-span-1 p-2 flex items-center justify-between"> 
+              <span>
+                Play
+              </span>
+              <span class="cursor-pointer">
+                <img src="./images/icon-ellipsis.svg" alt="" srcset="">
+              </span>
+            </header>
+            <main class="row-span-2 p-2 flex flex-col justify-evenly">
+              <h2 class="text-5xl font-light">
+                <span x-text="current"></span>hrs
+              </h2>
+              <span class="dark:text-neutral_pale_blue text-xs text-slate-500">
+                Last <span x-text="period_" x-data="{period_: '', get period_() {if (this.period == 'daily') {return 'Day'} else if (this.period == 'weekly') {return 'Week'} else {return 'Month'}}}"></span> - <span x-text="previous"></span>hrs
+              </span>
+            </main>
+          </div>
+        </div>
+
+        <!-- Study Card -->
+        <div class="rounded-xl flex-col overflow-hidden grid grid-rows-3 dark:text-white relative shadow" x-data="{
+          current: 0,
+          previous: 0,
+          get current() {
+            return this.study.timeframes[period].current
+          },
+          get previous() {
+            return this.study.timeframes[period].previous
+          }
+        }">
+          <!-- Card -->
+          <div class="w-full flex justify-end row-span-1 h-min absolute px-4 bg-primary_soft_red -top-2">
+            <!-- Card Image -->
+            <img src="./images/icon-study.svg" alt="">
+          </div>
+          <div class="row-span-3 rounded-xl dark:bg-neutral_dark_blue grid grid-rows-3 p-4 absolute bottom-0 right-0 left-0 top-[20%] dark:hover:bg-blue-950 hover:bg-slate-300 transition-colors cursor-pointer bg-slate-200">
+            <header class="row-span-1 p-2 flex items-center justify-between"> 
+              <span>
+                Study
+              </span>
+              <span class="cursor-pointer">
+                <img src="./images/icon-ellipsis.svg" alt="" srcset="">
+              </span>
+            </header>
+            <main class="row-span-2 p-2 flex flex-col justify-evenly">
+              <h2 class="text-5xl font-light">
+                <span x-text="current"></span>hrs
+              </h2>
+              <span class="dark:text-neutral_pale_blue text-xs text-slate-500">
+                Last <span x-text="period_" x-data="{period_: '', get period_() {if (this.period == 'daily') {return 'Day'} else if (this.period == 'weekly') {return 'Week'} else {return 'Month'}}}"></span> - <span x-text="previous"></span>hrs
+              </span>
+            </main>
+          </div>
+        </div>
+
+        <!-- Exercise-->
+        <div class="rounded-xl flex-col overflow-hidden grid grid-rows-3 dark:text-white relative shadow" x-data="{
+          current: 0,
+          previous: 0,
+          get current() {
+            return this.exercise.timeframes[period].current
+          },
+          get previous() {
+            return this.exercise.timeframes[period].previous
+          }
+        }">
+          <!-- Card -->
+          <div class="w-full flex justify-end row-span-1 h-min absolute px-4 bg-primary_green py-2">
+            <!-- Card Image -->
+            <img src="./images/icon-exercise.svg" alt="">
+          </div>
+          <div class="row-span-3 rounded-xl dark:bg-neutral_dark_blue grid grid-rows-3 p-4 absolute bottom-0 right-0 left-0 top-[20%] dark:hover:bg-blue-950 hover:bg-slate-300 transition-colors cursor-pointer bg-slate-200">
+            <header class="row-span-1 p-2 flex items-center justify-between"> 
+              <span>
+                Exercise
+              </span>
+              <span class="cursor-pointer">
+                <img src="./images/icon-ellipsis.svg" alt="" srcset="">
+              </span>
+            </header>
+            <main class="row-span-2 p-2 flex flex-col justify-evenly">
+              <h2 class="text-5xl font-light">
+                <span x-text="current"></span>hrs
+              </h2>
+              <span class="dark:text-neutral_pale_blue text-xs text-slate-500">
+                Last <span x-text="period_" x-data="{period_: '', get period_() {if (this.period == 'daily') {return 'Day'} else if (this.period == 'weekly') {return 'Week'} else {return 'Month'}}}"></span> - <span x-text="previous"></span>hrs
+              </span>
+            </main>
+          </div>
+        </div>
+
+        <!-- Social card -->
+        <div class="rounded-xl flex-col overflow-hidden grid grid-rows-3 dark:text-white relative shadow" x-data="{
+          current: 0,
+          previous: 0,
+          get current() {
+            return this.social.timeframes[period].current
+          },
+          get previous() {
+            return this.social.timeframes[period].previous
+          }
+        }">
+          <!-- Card -->
+          <div class="w-full flex justify-end row-span-1 h-min absolute px-4 bg-primary_violet -top-2">
+            <!-- Card Image -->
+            <img src="./images/icon-social.svg" alt="">
+          </div>
+          <div class="row-span-3 rounded-xl dark:bg-neutral_dark_blue grid grid-rows-3 p-4 absolute bottom-0 right-0 left-0 top-[20%] dark:hover:bg-blue-950 hover:bg-slate-300 transition-colors cursor-pointer bg-slate-200">
+            <header class="row-span-1 p-2 flex items-center justify-between"> 
+              <span>
+                Social
+              </span>
+              <span class="cursor-pointer">
+                <img src="./images/icon-ellipsis.svg" alt="" srcset="">
+              </span>
+            </header>
+            <main class="row-span-2 p-2 flex flex-col justify-evenly">
+              <h2 class="text-5xl font-light">
+                <span x-text="current"></span>hrs
+              </h2>
+              <span class="dark:text-neutral_pale_blue text-xs text-slate-500">
+                Last <span x-text="period_" x-data="{period_: '', get period_() {if (this.period == 'daily') {return 'Day'} else if (this.period == 'weekly') {return 'Week'} else {return 'Month'}}}"></span> - <span x-text="previous"></span>hrs
+              </span>
+            </main>
+          </div>
+        </div>
+
+        <!-- Self Care -->
+        <div class="rounded-xl flex-col overflow-hidden grid grid-rows-3 dark:text-white relative shadow" x-data="{
+          current: 0,
+          previous: 0,
+          get current() {
+            return this.self_care.timeframes[period].current
+          },
+          get previous() {
+            return this.self_care.timeframes[period].previous
+          }
+        }">
+          <!-- Card -->
+          <div class="w-full flex justify-end row-span-1 h-min absolute px-4 bg-primary_orange -top-2">
+            <!-- Card Image -->
+            <img src="./images/icon-self-care.svg" alt="">
+          </div>
+          <div class="row-span-3 rounded-xl dark:bg-neutral_dark_blue grid grid-rows-3 p-4 absolute bottom-0 right-0 left-0 top-[20%] dark:hover:bg-blue-950 hover:bg-slate-300 transition-colors cursor-pointer bg-slate-200">
+            <header class="row-span-1 p-2 flex items-center justify-between"> 
+              <span>
+                Self Care
+              </span>
+              <span class="cursor-pointer">
+                <img src="./images/icon-ellipsis.svg" alt="" srcset="">
+              </span>
+            </header>
+            <main class="row-span-2 p-2 flex flex-col justify-evenly">
+              <h2 class="text-5xl font-light">
+                <span x-text="current"></span>hrs
+              </h2>
+              <span class="dark:text-neutral_pale_blue text-xs text-slate-500">
+                Last <span x-text="period_" x-data="{period_: '', get period_() {if (this.period == 'daily') {return 'Day'} else if (this.period == 'weekly') {return 'Week'} else {return 'Month'}}}"></span> - <span x-text="previous"></span>hrs
+              </span>
+            </main>
+          </div>
+        </div>
+        
+      </section>
+    </main>
+  </div>
+
+
+  <script src="main.js"></script>
+</body>
+</html>
