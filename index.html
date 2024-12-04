@@ -12,8 +12,8 @@
 <link rel="shortcut icon" href="/images/favicon-32x32.png" type="image/x-icon">
 </head>
 <body>
-  <div class="w-screen h-screen dark:bg-neutral_deep_blue flex items-center justify-center bg-slate-100">
-    <main class="w-3/4 grid grid-cols-4 gap-6 transition-colors" x-data="app">
+  <div class=" min-h-screen dark:bg-neutral_deep_blue flex items-center justify-center bg-slate-100">
+    <main class="min-w-[800px] w-[1024px] md:grid grid-cols-4 gap-6 transition-colors hidden" x-data="app">
       <button class="fixed top-10 right-10 rounded-full p-2 dark:bg-neutral_dark_blue shadow-lg" @click="toggleTheme">
         <!-- Floating Action button -->
          <span x-data="{
@@ -279,6 +279,68 @@
         </div>
         
       </section>
+    </main>
+    <main class="flex flex-col md:hidden my-4 min-w-72" x-data="app">
+      <div class="rounded-xl dark:bg-neutral_dark_blue dark:text-white">
+        <div class="flex gap-4 bg-primary_blue p-6 rounded-xl">
+          <figure class="rounded-full border-2 border-white max-w-fit row-span-1 max-h-fit">
+            <img src="./images/image-jeremy.png" alt="" srcset="" width="50px">
+          </figure>
+          <div class="flex flex-col">
+            <span class="text-sm text-neutral_pale_blue">
+              Report for
+            </span>
+            <div class="text-xl font-light">
+              Jeremy Robson
+            </div>
+          </div>
+        </div>
+        <div>
+          <ul class="p-4 flex justify-around cursor-pointer items-center">
+            <li class="p-2" @click="setDaily()":class="period == 'daily' ? 'text-white' : 'text-neutral_pale_blue'">Daily</li>
+            <li class="p-2" @click="setWeekly()":class="period == 'weekly' ? 'text-white' : 'text-neutral_pale_blue'">Weekly</li>
+            <li class="p-2" @click="setMonthly()":class="period == 'monthly' ? 'text-white' : 'text-neutral_pale_blue'">Monthly</li>
+          </ul>
+        </div>
+      </div>
+      <ul>
+        <template x-for="dat in data">
+          <li class="dark:text-white my-4">
+            <div x-data="{
+              card_class: `card-${dat.title.replace(' ', '-')} rounded-xl flex justify-end px-2`
+            }" :class="card_class">
+            <img x-data="{
+              get icon_path() {
+                let ic = dat.title.toLowerCase().replace(' ', '-')
+                return `./images/icon-${ic}.svg`
+              }
+            }" :src="icon_path" alt="">
+          </div>
+            <div class="dark:bg-neutral_dark_blue rounded-xl p-4 relative -top-8">
+              <header class="font-medium flex justify-between w-full items-center">
+                <span x-text="dat.title"></span>
+                <img src="./images/icon-ellipsis.svg" alt="" height="">
+              </header>
+              <main x-data="
+              {
+                
+                get currentTime() {
+                  return dat.timeframes[period].current
+                },
+                get previousTime() {
+                  return dat.timeframes[period].previous
+                }}" class="flex items-center justify-between">
+                <h1 class="text-3xl font-light">
+                  <span x-text="currentTime"></span>hrs
+                </h1>
+                <span class="dark:text-neutral_pale_blue text-xs text-slate-500">
+                  Last <span x-text="period_" x-data="{period_: '', get period_() {if (this.period == 'daily') {return 'Day'} else if (this.period == 'weekly') {return 'Week'} else {return 'Month'}}}"></span> - <span x-text="previousTime"></span>hrs
+                </span>
+              </main>
+            </div>
+          </li>
+        </template>
+      </ul>
     </main>
   </div>
 

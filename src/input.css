@@ -2,3 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+.card-style{
+    @apply rounded-xl flex-col overflow-hidden grid grid-rows-3 dark:text-white relative shadow min-h-64;
+}
+
+.card-Work {
+    @apply bg-primary_red;
+}
+.card-Play {
+    @apply bg-primary_soft_blue;
+}
+.card-Study {
+    @apply bg-primary_soft_red;
+}
+.card-Exercise {
+    @apply bg-primary_green;
+}
+.card-Social {
+    @apply bg-primary_violet;
+}
+
+.card-Self-Care {
+    @apply bg-primary_orange;
+}

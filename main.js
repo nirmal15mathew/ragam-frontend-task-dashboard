@@ -112,6 +112,7 @@ document.addEventListener("alpine:init", () => {
     exercise: data[3],
     social: data[4],
     self_care: data[5],
+    data: data,
 
     setDaily() {
       this.period = "daily";
